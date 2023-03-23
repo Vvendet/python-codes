@@ -1,0 +1,3 @@
+# icc_listas
+
+Repositório para guardar resoluções de atividades da disciplina de Introdução à Ciência da Computação, da Universidade de Brasília. Cada pasta refere-se a uma lista de atividades de sua respectiva semana, sendo icc_1 relativa à lista de atividades da semana 1, icc_2 da semana 2 e assim por diante...
