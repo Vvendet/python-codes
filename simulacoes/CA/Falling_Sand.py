@@ -74,8 +74,10 @@ def FallingSand(): #aplicar as regras em cada celula
 
     for i in range(numCells): 
         for j in range(numCells):
-            if CA[i][j]==1 and Stable[i][j-1]==0:
+            if CAnext[i][j]==1 and Stable[i][j]==1:
                 Stable[i][j-1]=1
+            elif Stable[i][j]==1 and Stable[i][j-1]==0:
+                Stable[i][j]=0
 
 
     CA = CAnext
