@@ -1,39 +1,35 @@
-#Este é um exemplo de como o conceito de CA
-#pode ser implementado para simular o comportamento de fluidos 
+import pygame
+from pygame.locals import *
+from sys import exit
+import math
+import numpy
 
-#Neste codigo, simula-se a queda de areia.
+pygame.init()
 
-import tkinter
-from tkinter import *
-import time, random
-
-
+screensize = 500
 gridSize = 10 #tamanho de cada quadrado, cada célula
-screenSize = 400#tamanho da tela
-numCells = int(screenSize/gridSize) #numero de celulas
+numCells = int(screensize/gridSize) #numero de celulas
 
-win = Canvas(Tk(),width = screenSize, height = screenSize) #definir tela
+
+
+tela = pygame.display.set_mode((screensize, screensize))
+pygame.display.set_caption('Sand Falling')
+fonte = pygame.font.SysFont('arial',15,bold=True,italic = False)
 
 #Matriz que guarda as células (inicialmente todas as entradas nulas)
 CA = [[0 for x in range(numCells)] for y in range(numCells)]
+
 
 #Matriz para guardar celulas que sao estaveis
 #Celulas estaveis sao celulas onde a areia não pode mais cair
 Stable = [[0 for x in range(numCells)] for y in range(numCells)] 
 
-
-
 #limpa a tela e inicia
 def InitCanvas():
-    win.delete('all')
-
     #draw grid
     for i in range(numCells): #desenhar as linhas para a tabela
-        win.create_line(0,gridSize * i, screenSize, gridSize * i)
-        win.create_line(gridSize * i, 0, gridSize * i, screenSize)
-    win.pack()
-
-
+        pygame.draw.line(tela, (255,255,255), (0,gridSize * i), (screensize, gridSize * i), 1)
+        pygame.draw.line(tela, (255,255,255), (gridSize * i,0), (gridSize * i, screensize), 1)
 
 def RefreshGrid(): #função para atualizar a tela
     global CA
@@ -46,14 +42,8 @@ def RefreshGrid(): #função para atualizar a tela
             if CA[i][j] == 1:
                 x1 = gridSize * i
                 y1 = gridSize * j
-                win.create_rectangle(x1,y1,x1+gridSize,y1+gridSize,fill='yellow')
+                pygame.draw.rect(tela, (255,255,255), (x1,y1,gridSize,gridSize))
                 #a areia é amarela 
-            elif CA[i][j]==0:
-                x1 = gridSize * i
-                y1 = gridSize * j
-                #o restante é preto
-                win.create_rectangle(x1,y1,x1+gridSize,y1+gridSize,fill='black') 
-    win.update()
 
 def FallingSand(): #aplicar as regras em cada celula
     global CA
@@ -101,20 +91,27 @@ def FallingSand(): #aplicar as regras em cada celula
     CA = CAnext
     
     RefreshGrid()
-    win.after(1,FallingSand())
-
-                
 
 
+while True:
+    rect = pygame.draw.rect(tela, (0,0,0), (0,0,screensize,screensize))
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            exit()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if rect.collidepoint(event.pos):
+                dragging = True
+                # Get the mouse position
+                if dragging:
+                    mouse_x, mouse_y = event.pos
+                    CA[mouse_x//gridSize][mouse_y//gridSize]=1
 
+        elif event.type == pygame.MOUSEBUTTONUP:
+            dragging = False
 
-
-def click_handler(event): #desenhar os grãos na tela
-    CA[event.x//gridSize][event.y//gridSize] =1
+    pygame.draw.rect(tela, (0,0,0), (0,0,screensize,screensize))
+    
     FallingSand()
-                
-if __name__ == '__main__':
-
-    RefreshGrid()
-    win.bind("<B1-Motion>", click_handler)
-    win.mainloop()
+    
+    pygame.display.update()
