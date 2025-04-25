@@ -4,10 +4,11 @@ from sys import exit
 import math
 import numpy
 
+
 pygame.init()
 
 screensize = 500
-gridSize = 10 #tamanho de cada quadrado, cada célula
+gridSize = 5 #tamanho de cada quadrado, cada célula
 numCells = int(screensize/gridSize) #numero de celulas
 
 
@@ -27,9 +28,10 @@ Stable = [[0 for x in range(numCells)] for y in range(numCells)]
 #limpa a tela e inicia
 def InitCanvas():
     #draw grid
-    for i in range(numCells): #desenhar as linhas para a tabela
-        pygame.draw.line(tela, (255,255,255), (0,gridSize * i), (screensize, gridSize * i), 1)
-        pygame.draw.line(tela, (255,255,255), (gridSize * i,0), (gridSize * i, screensize), 1)
+    #for i in range(numCells): #desenhar as linhas para a tabela
+        #pygame.draw.line(tela, (255,255,255), (0,gridSize * i), (screensize, gridSize * i), 1)
+        #pygame.draw.line(tela, (255,255,255), (gridSize * i,0), (gridSize * i, screensize), 1)
+    pass
 
 def RefreshGrid(): #função para atualizar a tela
     global CA
@@ -50,23 +52,25 @@ def FallingSand(): #aplicar as regras em cada celula
 
     CAnext = [[0 for x in range(numCells)] for y in range(numCells)] #definir matriz da proxima iteracao
 
+
     for i in range(numCells): #percorrer as colunas
         for j in range(numCells): #percorrer as linhas
 
             #verificar se o grão chegou a uma casa estável
             if CA[i][j]==1 and Stable[i][j]==1:
                 #verificar se é possível "escorregar" para os lados
-                if CA[i+1][j+1]==0 and Stable[i+1][j]==0 :
-                    CAnext[i+1][j+1] =1
-                    #Stable[i+1][j]=1
-                elif CA[i-1][j+1]==0 and Stable[i-1][j]==0 :
-                    CAnext[i-1][j+1] =1
-                    #Stable[i-1][j]=1
+                try:
+                    if CA[i+1][j+1]==0 and Stable[i+1][j]==0 :                    
+                        CAnext[i+1][j+1] =1
 
+                    elif CA[i-1][j+1]==0 and Stable[i-1][j]==0 :    
+                        CAnext[i-1][j+1] =1
+                    else:
+                        CAnext[i][j]=1
+                except:        
                 #se nao for possível, então o grão permanece na casa estável
-                else:
                     CAnext[i][j]=1
-                    #Stable[i][j-1]=1
+                        #Stable[i][j-1]=1
 
             #bloco onde o grão está a cair        
             elif CA[i][j] == 1 and j<numCells-1:
