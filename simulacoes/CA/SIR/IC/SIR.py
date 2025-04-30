@@ -141,7 +141,6 @@ if __name__ == '__main__':
     RefreshGrid()
 
     generations = 50
-
     filename = 'infectados.dat' #Arquivo de saída para relacionar tempo x infectados
     filename2 = 'sadios.dat'#Arquivo de saída para relacionar tempo x sadios
     for i in range(generations):
