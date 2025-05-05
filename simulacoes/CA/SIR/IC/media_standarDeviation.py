@@ -30,7 +30,8 @@ desvioPadrao =[math.sqrt(desvioPadrao[i]/50) for i in range(generations)]
 
 with open('media_desvioPadrao.dat','a') as f:
     for i in range(generations):
-        f.write(str(media[i-1])+"    ")
+        f.write(str(i+1) +"    "+str(media[i-1])+"    ")
         f.write(str(desvioPadrao[i-1])+"\n")
-
-
+with open('comando.txt','a') as f:
+    for i in range(generations):
+        f.write("plot 'infectados"+str(i+1)+".dat' u 1:2 wl,")
