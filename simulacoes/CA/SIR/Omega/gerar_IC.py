@@ -9,6 +9,8 @@ for i in range(numCells):
 		else:
 			CA[i][j] = 0
 
+print(CA)
+
 I = 0
 S = 0
 R = 0
