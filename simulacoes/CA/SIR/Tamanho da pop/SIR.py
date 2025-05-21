@@ -13,7 +13,7 @@ CA = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0
 #matriz para contar tempo de recuperacao
 R = [[0 for x in range(numCells)] for y in range(numCells)]
 
-rec = 16 #iteracoes para recuperação
+rec = 7 #iteracoes para recuperação
 propagacao = 2 #individuos na vizinhança suficiente para propagação
 #probabilidade = 3 #probabilidade de "nascer" com a doença
 
