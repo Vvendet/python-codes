@@ -70,13 +70,13 @@ I_interp_norm = I_interp / np.max(I_interp)
 
 # === Geracao do grafico ===
 plt.figure(figsize=(10, 6))
-plt.plot(tempo, I_ac_norm, label="Automato Celular (I_ac)", color="blue", linewidth=2)
-plt.plot(tempo, I_interp_norm, label=f"Modelo SIR (Euler)\nβ={beta_ajustado:.3f}, γ={gamma_ajustado:.3f}", 
+plt.plot(tempo, I_ac, label="Automato Celular (I_ac)", color="blue", linewidth=2)
+plt.plot(tempo, I_interp, label=f"Modelo SIR (Euler)\nβ={beta_ajustado:.3f}, γ={gamma_ajustado:.3f}", 
          color="red", linestyle="--", linewidth=2)
 #plt.errorbar(tempo, I_ac_norm, yerr=y_err, fmt='o', label='Data with error bars', color='blue', ecolor='red', capsize=5)
 plt.xlabel("Tempo")
 plt.ylabel("Proporcao de Infectados")
-plt.title("Comparacao entre o Modelo SIR (Euler) e Automato Celular Normalizados")
+plt.title("Comparacao entre o Modelo SIR (Euler) e Automato Celular")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
