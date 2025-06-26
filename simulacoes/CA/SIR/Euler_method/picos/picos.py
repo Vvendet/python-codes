@@ -4,12 +4,7 @@ from scipy.interpolate import interp1d
 from scipy.optimize import minimize
 
 # === Carrega os dados ===
-dados = np.loadtxt("media_desvioPadrao.dat")
-tempo = dados[:4900001, 0]
-infectados = dados[:4900001, 1]
-y_err = dados[:4900001,2]
-N = 10000
-I_ac = infectados / N
+
 
 # === Modelo SIR com metodo de Euler ===
 def euler_sir(S0, I0, R0, beta, gamma, T, dt):
@@ -44,39 +39,55 @@ def erro_quadratico_dois_parametros(params, S0, I0, R0, T, dt, t_ac, I_ac):
     erro = np.mean((I_interp - I_ac) ** 2)
     return erro
 
-# === Parametros iniciais ===
-I0 = I_ac[0]
-S0 = 1 - I0
-R0 = 0.0
-T = tempo[-1] + 1
-dt = 0.001
 
-params_iniciais = [0.2, 0.2]
-resultado = minimize(
-    erro_quadratico_dois_parametros,
-    x0=params_iniciais,
-    bounds=[(0.01, 1.0), (0.01, 1.0)],
-    args=(S0, I0, R0, T, dt, tempo, I_ac),
-    method='L-BFGS-B'
-)
+maiores_AC = []
+maiores_IC = []
 
-beta_ajustado, gamma_ajustado = resultado.x
-t_euler, _, I_euler, _ = euler_sir(S0, I0, R0, beta_ajustado, gamma_ajustado, T, dt)
-I_interp = interp1d(t_euler, I_euler)(tempo)
+# === Maximos de cada grafico ===
+for i in range(7):
 
-# === Curvas Normalizadas ===
-I_ac_norm = I_ac / np.max(I_ac)
-I_interp_norm = I_interp / np.max(I_interp)
+    dados = np.loadtxt("media_desvioPadrao_o"+str(i+3) +".dat")
+    tempo = dados[:4900001, 0]
+    infectados = dados[:4900001, 1]
+    #y_err = dados[:4900001,2]
+    N = 10000
+    I_ac = infectados / N
+
+    # === Parametros iniciais ===
+    I0 = I_ac[0]
+    S0 = 1 - I0
+    R0 = 0.0
+    T = tempo[-1] + 1
+    dt = 0.001
+    params_iniciais = [0.2, 0.2]
+
+
+    resultado = minimize(
+        erro_quadratico_dois_parametros,
+        x0=params_iniciais,
+        bounds=[(0.01, 1.0), (0.01, 1.0)],
+        args=(S0, I0, R0, T, dt, tempo, I_ac),
+        method='L-BFGS-B'
+    )
+
+    beta_ajustado, gamma_ajustado = resultado.x
+    t_euler, _, I_euler, _ = euler_sir(S0, I0, R0, beta_ajustado, gamma_ajustado, T, dt)
+    I_interp = interp1d(t_euler, I_euler)(tempo)
+
+
+    maiores_AC.append(max(I_ac))
+    maiores_IC.append(max(I_interp))
+
 
 # === Geracao do grafico ===
 plt.figure(figsize=(10, 6))
-plt.plot(tempo, I_ac, label="Automato Celular (I_ac)", color="blue", linewidth=2)
-plt.plot(tempo, I_interp, label=f"Modelo SIR (Euler)\nβ={beta_ajustado:.3f}, γ={gamma_ajustado:.3f}", 
+plt.plot([3,4,5,6,7,8,9], maiores_AC, label="Picos modelo AC", color="blue", linewidth=2)
+plt.plot([3,4,5,6,7,8,9], maiores_IC, label=f"Picos modelo IC", 
          color="red", linestyle="--", linewidth=2)
 #plt.errorbar(tempo, I_ac_norm, yerr=y_err, fmt='o', label='Data with error bars', color='blue', ecolor='red', capsize=5)
-plt.xlabel("Tempo")
-plt.ylabel("Proporcao de Infectados")
-plt.title("Comparacao entre o Modelo SIR (Euler) e Automato Celular")
+plt.xlabel("ômegas")
+plt.ylabel("Picos de Infectados")
+plt.title("Comparacao entre Picos AC e IC")
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
