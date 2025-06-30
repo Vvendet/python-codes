@@ -1,6 +1,6 @@
 import random
 
-numCells = 100
+numCells = 250
 CA = [[0 for x in range(numCells)] for y in range(numCells)]
 for i in range(numCells):
 	for j in range(numCells):
